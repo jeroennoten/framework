@@ -587,7 +587,7 @@ class Container implements ArrayAccess, ContainerContract
         $abstract = $this->getAlias($abstract);
 
         $needsContextualBuild = ! empty($parameters) || ! is_null(
-            $this->getContextualConcrete($abstract)
+            $this->getContextualConcrete($abstract),
         );
 
         // If an instance of the type is currently being managed as a singleton we'll
@@ -754,7 +754,7 @@ class Container implements ArrayAccess, ContainerContract
         // dependency instances and then use the reflection instances to make a
         // new instance of this class, injecting the created dependencies in.
         $instances = $this->resolveDependencies(
-            $dependencies
+            $dependencies,
         );
 
         array_pop($this->buildStack);
@@ -772,6 +772,7 @@ class Container implements ArrayAccess, ContainerContract
     {
         $results = [];
 
+        /** @var ReflectionParameter $dependency */
         foreach ($dependencies as $dependency) {
             // If this dependency has a override for this particular build we will use
             // that instead as the value. Otherwise, we will continue with this run
@@ -785,7 +786,7 @@ class Container implements ArrayAccess, ContainerContract
             // If the class is null, it means the dependency is a string or some other
             // primitive type which we can not resolve since it is not a class and
             // we will just bomb out with an error since we have no-where to go.
-            $results[] = is_null($class = $dependency->getType())
+            $results[] = $dependency->getType()?->isBuiltin()
                             ? $this->resolvePrimitive($dependency)
                             : $this->resolveClass($dependency);
         }
@@ -802,7 +803,7 @@ class Container implements ArrayAccess, ContainerContract
     protected function hasParameterOverride($dependency)
     {
         return array_key_exists(
-            $dependency->name, $this->getLastParameterOverride()
+            $dependency->name, $this->getLastParameterOverride(),
         );
     }
 
@@ -962,7 +963,7 @@ class Container implements ArrayAccess, ContainerContract
         $this->fireCallbackArray($object, $this->globalResolvingCallbacks);
 
         $this->fireCallbackArray(
-            $object, $this->getCallbacksForType($abstract, $object, $this->resolvingCallbacks)
+            $object, $this->getCallbacksForType($abstract, $object, $this->resolvingCallbacks),
         );
 
         $this->fireAfterResolvingCallbacks($abstract, $object);
@@ -980,7 +981,7 @@ class Container implements ArrayAccess, ContainerContract
         $this->fireCallbackArray($object, $this->globalAfterResolvingCallbacks);
 
         $this->fireCallbackArray(
-            $object, $this->getCallbacksForType($abstract, $object, $this->afterResolvingCallbacks)
+            $object, $this->getCallbacksForType($abstract, $object, $this->afterResolvingCallbacks),
         );
     }
 
