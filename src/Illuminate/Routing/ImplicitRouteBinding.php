@@ -3,6 +3,7 @@
 namespace Illuminate\Routing;
 
 use Illuminate\Database\Eloquent\Model;
+use ReflectionParameter;
 
 class ImplicitRouteBinding
 {
@@ -17,6 +18,7 @@ class ImplicitRouteBinding
     {
         $parameters = $route->parameters();
 
+        /** @var ReflectionParameter $parameter */
         foreach ($route->signatureParameters(Model::class) as $parameter) {
             if (! $parameterName = static::getParameterName($parameter->name, $parameters)) {
                 continue;
@@ -28,7 +30,7 @@ class ImplicitRouteBinding
                 continue;
             }
 
-            $model = $container->make($parameter->getClass()->name);
+            $model = $container->make($parameter->getType()?->getName());
 
             $route->setParameter($parameterName, $model->where(
                 $model->getRouteKeyName(), $parameterValue

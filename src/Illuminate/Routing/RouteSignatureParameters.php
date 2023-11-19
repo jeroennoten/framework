@@ -24,7 +24,7 @@ class RouteSignatureParameters
                         : (new ReflectionFunction($action['uses']))->getParameters();
 
         return is_null($subClass) ? $parameters : array_filter($parameters, function ($p) use ($subClass) {
-            return $p->getType() && is_a($p->getType()->getName(), $subClass);
+            return $p->getType() && is_a($p->getType()->getName(), $subClass, true);
         });
     }
 
