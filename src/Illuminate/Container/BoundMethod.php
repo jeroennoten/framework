@@ -152,8 +152,8 @@ class BoundMethod
             $dependencies[] = $parameters[$parameter->name];
 
             unset($parameters[$parameter->name]);
-        } elseif ($parameter->getClass()) {
-            $dependencies[] = $container->make($parameter->getClass()->name);
+        } elseif ($parameter->getType()) {
+            $dependencies[] = $container->make($parameter->getType()->getName());
         } elseif ($parameter->isDefaultValueAvailable()) {
             $dependencies[] = $parameter->getDefaultValue();
         }
