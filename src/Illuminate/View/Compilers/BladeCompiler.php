@@ -306,7 +306,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
             $value = Str::substr($value, 1, -1);
         }
 
-        return call_user_func($this->customDirectives[$name], trim($value));
+        return call_user_func($this->customDirectives[$name], trim((string) $value));
     }
 
     /**
