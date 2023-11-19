@@ -59,7 +59,7 @@ class RouteGroup
     {
         $old = Arr::get($old, 'prefix');
 
-        return isset($new['prefix']) ? trim($old, '/').'/'.trim($new['prefix'], '/') : $old;
+        return isset($new['prefix']) ? trim((string)$old, '/').'/'.trim((string)$new['prefix'], '/') : $old;
     }
 
     /**
