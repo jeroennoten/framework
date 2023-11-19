@@ -99,7 +99,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.4-dev"
+            "dev-5.4-php8.2": "5.4-dev"
         }
     },
     "suggest": {
