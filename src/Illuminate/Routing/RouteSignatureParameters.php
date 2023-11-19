@@ -6,6 +6,8 @@ use ReflectionMethod;
 use ReflectionFunction;
 use Illuminate\Support\Str;
 
+use function is_a;
+
 class RouteSignatureParameters
 {
     /**
@@ -22,7 +24,7 @@ class RouteSignatureParameters
                         : (new ReflectionFunction($action['uses']))->getParameters();
 
         return is_null($subClass) ? $parameters : array_filter($parameters, function ($p) use ($subClass) {
-            return $p->getClass() && $p->getClass()->isSubclassOf($subClass);
+            return $p->getType() && is_a($p->getType()->getName(), $subClass);
         });
     }
 
@@ -34,7 +36,7 @@ class RouteSignatureParameters
      */
     protected static function fromClassMethodString($uses)
     {
-        list($class, $method) = Str::parseCallback($uses);
+        [$class, $method] = Str::parseCallback($uses);
 
         if (! method_exists($class, $method) && is_callable($class, $method)) {
             return [];
